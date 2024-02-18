@@ -1,0 +1,28 @@
+{% extends 'default.html' %}
+
+
+{% block title %}
+Post
+{% endblock title %}
+
+
+{% block content %}
+<h1>{{ post.name }}</h1>
+<h2>{{ post.text }}</h2>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+<hr>
+{% if post.comment %}
+
+    {% for com in post.comment %}
+        <h2>{{com.user}} : {{ com.text|safe }}</h2>
+    {% endfor %}
+
+{% endif %}
+
+{% endblock content %}
+
