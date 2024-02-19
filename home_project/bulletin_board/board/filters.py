@@ -4,7 +4,7 @@ from django import forms
 
 
 class PostFilter(FilterSet):
-    data_time = DateTimeFilter(
+    date = DateTimeFilter(
         widget=forms.DateInput(attrs={'type': 'date'}),
         lookup_expr='date__lte'
     )

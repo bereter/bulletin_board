@@ -132,8 +132,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_DIR = BASE_DIR / 'static'
+# STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [STATIC_DIR]
+
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -142,12 +146,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CKEDITOR_UPLOAD_PATH = 'media/'
-CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
-
-STATICFILES_DIRS = [BASE_DIR / 'images']
+CKEDITOR_UPLOAD_PATH = 'media'
+# CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
 
 SITE_ID = 1
+
 LOGIN_URL = 'account/login/'
 LOGIN_REDIRECT_URL = 'board/'
 ACCOUNT_EMAIL_REQUIRED = True
@@ -170,3 +173,10 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_EMAIL')
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'removePlugins': 'exportpdf',
+        'extraPlugins': ','.join(['html5video']),
+    },
+}

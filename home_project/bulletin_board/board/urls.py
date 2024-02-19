@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import BoardList, BoardDetail, BoardCreate, BoardUpdate, BoardDelete, BoardListUser
-from django.conf import settings
-from django.conf.urls.static import static
+from .views import BoardList, BoardDetail, BoardCreate, BoardUpdate, BoardDelete, BoardListUser, reply_on, reply_off
+
 
 urlpatterns = [
    path('', BoardList.as_view(), name='post_list'),
@@ -9,5 +8,7 @@ urlpatterns = [
    path('create/', BoardCreate.as_view(), name='post_create'),
    path('<int:pk>/update/', BoardUpdate.as_view(), name='post_update'),
    path('<int:pk>/delete/', BoardDelete.as_view(), name='post_delete'),
-   path('myboard/', BoardListUser.as_view(), name='post_list_user')
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   path('myboard/', BoardListUser.as_view(), name='post_list_user'),
+   path('replyon/<int:pk>/', reply_on, name='reply_on'),
+   path('replyoff/<int:pk>/', reply_off, name='reply_off'),
+]

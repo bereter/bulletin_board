@@ -59,6 +59,14 @@ class Comment(models.Model):
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.post.id)])
 
+    def status_on(self):
+        self.status = True
+        self.save()
+
+    def status_off(self):
+        self.status = False
+        self.save()
+
     def __str__(self):
         return f'{self.post} : {self.text[0:50]}...'
 

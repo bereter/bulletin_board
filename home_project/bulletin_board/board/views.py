@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
 from .models import Post, Comment
@@ -7,7 +7,8 @@ from .forms import CreateFormBoard, CreateFormComment
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 
 class BoardList(ListView):
     model = Post
@@ -50,6 +51,11 @@ class BoardDetail(FormMixin, DetailView):
         self.object.save()
         return super().form_valid(form)
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     print(context['post'])
+    #     return context
+
 
 class BoardCreate(LoginRequiredMixin, CreateView):
     form_class = CreateFormBoard
@@ -67,18 +73,47 @@ class BoardUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'board_create_post.html'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.user != kwargs['instance'].user:
+            return self.handle_no_permission()
+        return kwargs
+
 
 class BoardDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'board_delete.html'
     success_url = reverse_lazy('post_list')
 
+    def form_valid(self, form):
+        if self.request.user != self.object.user:
+            return self.handle_no_permission()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
+
 
 class BoardListUser(ListView):
-    ordering = '-date'
-    template_name = 'board_posts.html'
+    template_name = 'board_my_posts.html'
     context_object_name = 'posts'
     paginate_by = 15
 
     def get_queryset(self):
         return Post.objects.filter(user=self.request.user)
+
+
+@login_required
+def reply_on(request, pk):
+    post = request.post.id
+    comment_obj = Comment.objects.get(id=pk)
+    comment_obj.status_on()
+    return redirect(f'board/{post}/')
+
+
+@login_required
+def reply_off(request, pk):
+    post = request.post.id
+    comment_obj = Comment.objects.get(id=pk)
+    comment_obj.status_off()
+    return redirect(f'board/{post}/')
