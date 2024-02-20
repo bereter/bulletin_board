@@ -105,15 +105,13 @@ class BoardListUser(ListView):
 
 @login_required
 def reply_on(request, pk):
-    post = request.post.id
     comment_obj = Comment.objects.get(id=pk)
     comment_obj.status_on()
-    return redirect(f'board/{post}/')
+    return redirect('post_detail', comment_obj.post_id)
 
 
 @login_required
 def reply_off(request, pk):
-    post = request.post.id
     comment_obj = Comment.objects.get(id=pk)
     comment_obj.status_off()
-    return redirect(f'board/{post}/')
+    return redirect('post_detail', comment_obj.post_id)

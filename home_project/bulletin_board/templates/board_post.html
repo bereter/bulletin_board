@@ -26,9 +26,9 @@ Post
         <td>
         {% if user == post.user %}
             {% if not com.status and post.user != com.user %}
-                <td><button type="button"><a href="/board/reply_on/{{ com.id }}/"> Откликнуться </a></button></td>
+                <td><button type="button"><a href="/board/{{ com.id }}/replyon/"> Откликнуться </a></button></td>
             {% elif com.status and post.user != com.user %}
-                <td><button type="button"><a href="/board/reply_off/{{ com.id }}/"> Отменить отклик </a></button></td>
+                <td><button type="button"><a href="/board/{{ com.id }}/replyoff/"> Отменить отклик </a></button></td>
             {% endif %}
         {% endif %}
         </td>
