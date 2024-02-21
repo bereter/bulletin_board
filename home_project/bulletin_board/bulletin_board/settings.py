@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    'board',
+    'board.apps.BoardConfig',
     'ckeditor',
     'ckeditor_uploader',
     'allauth',
@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -151,14 +152,15 @@ CKEDITOR_UPLOAD_PATH = 'media'
 
 SITE_ID = 1
 
-LOGIN_URL = 'account/login/'
-LOGIN_REDIRECT_URL = 'board/'
+# LOGIN_URL = 'account/login/'
+LOGIN_REDIRECT_URL = '/board/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # mandatory
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+ACCOUNT_LOGOUT_REDIRECT_URL = '/board/'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -176,7 +178,7 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_EMAIL')
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
-        'removePlugins': 'exportpdf',
-        'extraPlugins': ','.join(['html5video']),
+        'extraPlugins': 'html5video',
     },
 }
+

@@ -24,7 +24,6 @@ Posts
            <tr>
                <td> <a href="{% url 'post_detail' post.id %}" style="text-decoration:none; color:inherit">
                    <h2>{{ post.name }}</h2>
-                   <h3>{{ post.text|truncatechars:150 }}</h3>
                    <h4>Отклики: {{ post.len_comment }}  Категория: {{ post.get_category_display }}</h4>
                </a> </td>
                <td> <h2>От: {{ post.user.username }}</h2> <h3>{{ post.date }}</h3> </td>

@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
+
 class BoardList(ListView):
     model = Post
     ordering = '-date'
@@ -28,7 +29,7 @@ class BoardList(ListView):
         return context
 
 
-class BoardDetail(FormMixin, DetailView):
+class BoardDetail(LoginRequiredMixin, FormMixin, DetailView):
     model = Post
     template_name = 'board_post.html'
     context_object_name = 'post'
@@ -83,7 +84,7 @@ class BoardUpdate(LoginRequiredMixin, UpdateView):
 class BoardDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'board_delete.html'
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy('post_list_user')
 
     def form_valid(self, form):
         if self.request.user != self.object.user:
@@ -93,14 +94,46 @@ class BoardDelete(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-
-class BoardListUser(ListView):
+class BoardListUser(LoginRequiredMixin, ListView):
     template_name = 'board_my_posts.html'
     context_object_name = 'posts'
     paginate_by = 15
 
     def get_queryset(self):
-        return Post.objects.filter(user=self.request.user)
+        return Post.objects.filter(user=self.request.user).order_by('-date')
+
+
+class CommentDelete(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'board_delete.html'
+    success_url = reverse_lazy('post_detail')
+
+    def form_valid(self, form):
+        if self.request.user == self.object.user or self.object.post.user == self.request.user:
+            success_url = self.object.get_absolute_url()
+            self.object.delete()
+            return HttpResponseRedirect(success_url)
+        else:
+            return self.handle_no_permission()
+
+
+class BoardListUserResponse(LoginRequiredMixin, ListView):
+    template_name = 'board_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 15
+
+    # def get_queryset(self):
+    #     return Post.objects.filter(comment_post__user=self.request.user, comment_post__status=True).order_by('-date')
+    def get_queryset(self):
+        queryset = Post.objects.filter(comment_post__user=self.request.user, comment_post__status=True).order_by('-date')
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
 
 
 @login_required
@@ -115,3 +148,4 @@ def reply_off(request, pk):
     comment_obj = Comment.objects.get(id=pk)
     comment_obj.status_off()
     return redirect('post_detail', comment_obj.post_id)
+

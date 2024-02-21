@@ -23,19 +23,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/board/">Все объявления
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/board/myboard/">Мои объявления</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/board/create/">Создать объявление</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admins/">Отклики</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/board/">Все объявления
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/board/myboard/">Мои объявления</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/board/create/">Создать объявление</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/board/myresponse/">Принятые отклики</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/accounts/logout/">Выход</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/accounts/login/">Вход/Регистрация</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -46,7 +55,6 @@
             <div class="col-lg-12 text-center">
 
                 {% block content %}
-
                 {% endblock content %}
 
             </div>

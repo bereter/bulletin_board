@@ -9,12 +9,17 @@ Post
 {% block content %}
 <h1>{{ post.name }}</h1>
 <h2>{{ post.text|safe }}</h2>
-
+<hr>
+<div>
+<h3>Написать отклик:</h3>
 <form action="" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div>
+    {{ form.text }}
+        </div>
     <input type="submit" value="Save" />
 </form>
+</div>
 <hr>
 {% if post.comment %}
 <table>
@@ -30,6 +35,10 @@ Post
             {% elif com.status and post.user != com.user %}
                 <td><button type="button"><a href="/board/{{ com.id }}/replyoff/"> Отменить отклик </a></button></td>
             {% endif %}
+        {% endif %}
+        {% if user == com.user or user == post.user %}
+        <td><button type="button"><a href="/board/{{ com.id }}/delete_comment/"> Удалить отклик </a></button></td>
+
         {% endif %}
         </td>
     </tr>

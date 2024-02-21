@@ -14,3 +14,10 @@ class PostFilter(FilterSet):
         fields = {
             'category': ['exact'],
         }
+
+
+class PostFilterUser(FilterSet):
+    date = DateTimeFilter(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        lookup_expr='date__lte'
+    )
